@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^Complection)(void);
+
 @protocol CardStackViewControllerDelegate <NSObject>
 
 - (void)didFinishStacking:(UIViewController *)viewController;
@@ -90,4 +92,16 @@
 
 - (instancetype)init;
 
+- (void)stackViewController:(UIViewController *)newContrller WithSize:(CGSize)size WithRoundedTopCorners:(BOOL)roundedCorners draggable:(BOOL)isDraggable BottomBackgroundColor:(UIColor *)color Complection:(Complection)complectionBlock;
+
+
+- (void)unstackLastViewControllerWithHandle:(Complection)complection;
+
+- (void)unstackAllViewControllersWithHandle:(Complection)complection;
+
+- (void)unstackToViewController:(UIViewController *)viewController ComplectionHandle:(Complection)complection;
+
+- (void)unstackLast:(NSInteger)numberOfCards ComplectionHandle:(Complection)complection;
+
+- (void)unstackToRootViewControllerWithHandle:(Complection)complection;
 @end

@@ -13,7 +13,7 @@
 #import "UIView+Extension.h"
 #import "Constants.h"
 
-typedef void(^Complection)(void);
+//typedef void(^Complection)(void);
 
 @interface CardStackViewController () <UIDynamicAnimatorDelegate>
 
@@ -543,6 +543,118 @@ typedef void(^Complection)(void);
         }
     }];
   
+}
+
+#pragma mark 外界调用出栈
+- (void)unstackLast:(NSInteger)numberOfCards ComplectionHandle:(Complection)complection {
+    
+    if (numberOfCards <= self.viewControllers.count) {
+        
+        NSMutableArray *viewControllersToUnstack = [NSMutableArray<UIViewController *> array];
+        
+        [self.viewControllers enumerateObjectsWithOptions:(NSEnumerationOptions)NSEnumerationReverse usingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (idx < numberOfCards) {
+                [viewControllersToUnstack addObject:obj];
+            }
+        }];
+
+        // FIXME: 还有一个方法
+        [self unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)[viewControllersToUnstack reverseObjectEnumerator] Handle:complection];
+        
+        
+    } else {
+        NSAssert(NO, @"numberOfCards 必须小于 viewControllers 的 count");
+        return;
+    }
+    
+}
+
+
+- (void)unstackAllViewControllersWithHandle:(Complection)complection {
+    
+    [self unstackSelectedViewControllers:self.viewControllers Handle:complection];
+
+}
+
+- (void)unstackLastViewControllerWithHandle:(Complection)complection {
+    
+    if (self.attachmentBehaviors.lastObject && self.topViewController) {
+        UIAttachmentBehavior *attachmentBehaviour = self.attachmentBehaviors.lastObject;
+        id<UIDynamicItem> item = attachmentBehaviour.items.lastObject;
+
+        UIViewController *topController = self.topViewController;
+        attachmentBehaviour.anchorPoint = CGPointMake(self.view.center.x, item.center.y + item.bounds.size.height);
+        
+        if (self.previousViewController) {
+            [self animateCardToFrontViewController:self.previousViewController];
+        }
+        [self removeDimViewToViewController:topController animated:YES complectionBlock:^{
+            [self dismissCard];
+            complection();
+        }];
+        
+    } else {
+        return;
+    }
+    
+}
+
+- (void)unstackToRootViewControllerWithHandle:(Complection)complection {
+    
+    [self unstackLast:self.viewControllers.count - 1 ComplectionHandle:complection];
+    
+    
+}
+
+- (void)unstackToViewController:(UIViewController *)viewController ComplectionHandle:(Complection)complection {
+    
+    if (![self.viewControllers indexOfObject: viewController]) {
+        
+        NSAssert(NO, @"控制器没有在栈中被发现");
+        
+    }
+    
+    NSInteger index = [self.viewControllers indexOfObject: viewController];
+    
+    NSInteger cardsToUnstack = self.numberOfCards - index + 1;
+    
+    [self unstackLast:cardsToUnstack ComplectionHandle:complection];
+    
+}
+
+- (void)unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)selectedControllers Handle:(Complection)complection {
+    
+    CGPoint anchorPoint = CGPointMake(self.view.bounds.size.width, self.view.bounds.size.height * 3/2);
+    
+    NSInteger remainingCards = self.numberOfCards - selectedControllers.count;
+    
+    NSMutableArray *behaviours = (NSMutableArray *)[self.attachmentBehaviors subarrayWithRange:NSMakeRange(0, remainingCards)];
+    
+    for (UIAttachmentBehavior *behavior in behaviours) {
+        behavior.anchorPoint = anchorPoint;
+    }
+    
+    [UIView animateWithDuration:dimDuration animations:^{
+        
+        for (UIViewController *vc in selectedControllers) {
+            [self removeDimViewToViewController:vc animated:NO complectionBlock:^{
+                [self dismissCard];
+            }];
+        }
+        
+    } completion:^(BOOL finished) {
+        if (selectedControllers.count < self.viewControllers.count) {
+            NSInteger index = self.viewControllers.count - selectedControllers.count - 1;
+            
+            UIViewController *topVC = self.viewControllers[index];
+            [self animateCardToFrontViewController:topVC];
+            complection();
+        }
+    }];
+    
+    
+    
+    
 }
 
 
