@@ -19,10 +19,13 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor randomColor];
+    NSLog(@"temp");
 }
+
 - (IBAction)dismissAllcards:(UIButton *)sender {
     [self.delegate dismissAllCards];
 }
+
 - (IBAction)Close:(UIButton *)sender {
     [self.delegate disMiss];
 

@@ -19,13 +19,14 @@
 
 @property (nonatomic, strong) UIColor *bgColor;
 @property (nonatomic, strong) NSMutableArray<UIViewController *> *viewControllers;
-
+// 声明动画相关属性
 @property (nonatomic, strong) UIDynamicAnimator *animator;
 @property (nonatomic, strong) UICollisionBehavior *collisionBehavior;
 @property (nonatomic, strong) NSMutableArray<UIAttachmentBehavior *> *attachmentBehaviors;
 @property (nonatomic, strong) UIDynamicItemBehavior *dynamicItemBehavior;
 @property (nonatomic, strong) UIAttachmentBehavior *panAttachmentBehavior;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+
 @property (nonatomic, assign) BOOL isPresentingCard; // 默认为 false
 @property (nonatomic, assign) CGPoint initialDraggingPoint; // 默认 CGPoint.zero
 @property (nonatomic, strong) Complection stackCompletionBlock;
@@ -72,7 +73,29 @@
     return nil;
 }
 
+#pragma mark 只读属性
+- (UIViewController *)topViewController {
+    
+    return self.viewControllers.lastObject;
+    
+}
 
+- (NSInteger)numberOfCards {
+    
+    return self.viewControllers.count;
+}
+
+- (UIViewController *)previousViewController {
+    
+    NSInteger previousCardIndex = self.viewControllers.count - 2;
+    if (previousCardIndex >= 0) {
+        return self.viewControllers[previousCardIndex];
+    }
+    return nil;
+    
+}
+
+#pragma mark 视图相关
 - (void)viewDidLoad {
     
     [super viewDidLoad];
@@ -131,7 +154,8 @@
     layer.frame = bounds;
     CGRect rect = CGRectMake(0, 0, bounds.size.width, bounds.size.height + fakeViewHeight);
     rect.origin = CGPointZero;
-    layer.path = (__bridge CGPathRef _Nullable)([UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerTopRight && UIRectCornerTopLeft cornerRadii:CGSizeMake(topCornerRadius, topCornerRadius)]);
+    // UIRectCornerTopRight && UIRectCornerTopLeft
+    layer.path = [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerTopRight | UIRectCornerTopLeft cornerRadii:CGSizeMake(topCornerRadius, topCornerRadius)] CGPath];
     
     return layer;
 }
@@ -163,6 +187,7 @@
     self.isPresentingCard = NO;
     
     self.initialDraggingPoint = CGPointZero;
+    
     
 }
 
@@ -199,6 +224,17 @@
 /// isDraggable true
 /// color nil
 /// complection nil
+
+/**
+ 新的卡片控制器入栈
+
+ @param newContrller 想要 present 的控制器
+ @param size 是否需要设置特殊的 size 默认 CGSizeZero
+ @param roundedCorners 视图的上右 和上左 是否圆角显示 默认 yes
+ @param isDraggable 是否可以用手指上下垂直拉动控制器 默认 yes
+ @param color CardController 每个会加一个 假的self.view 给一个设置好的颜色, 默认是 present 的视图控制器的 bgColor
+ @param complectionBlock 完成回调
+ */
 - (void)stackViewController:(UIViewController *)newContrller WithSize:(CGSize)size WithRoundedTopCorners:(BOOL)roundedCorners draggable:(BOOL)isDraggable BottomBackgroundColor:(UIColor *)color Complection:(Complection)complectionBlock {
     
     if (self.viewControllers.count == 0) {
@@ -221,6 +257,7 @@
     
     if (roundedCorners) {
         newContrller.view.layer.mask = [self maskLayerWithBounds:newContrller.view.bounds];
+        
     }
     [newContrller.view addGestureRecognizer:self.panGestureRecognizer];
     
@@ -260,6 +297,7 @@
     [viewController.view.layer addAnimation:anim forKey:@"transform"];
 }
 
+// 创建背景模糊视图
 - (UIView *)createContainerDimView {
     
     UIView *containerView = [[UIView alloc] init];
@@ -349,10 +387,9 @@
         UIAttachmentBehavior *currentAttachmentBehaviour = [self.attachmentBehaviors lastObject];
         UIView *currentDimView = panningView.superview;
         
-        
         CGPoint panLocationInView = [sender locationInView:self.view];
         CGFloat defaultAnchorPointX = currentAttachmentBehaviour.anchorPoint.x;
-        CGFloat defaultAnchorPointY = CGRectGetMaxY(self.view.bounds) - CGRectGetMidY(panningView.bounds);
+        CGFloat defaultAnchorPointY = CGRectGetMaxY(self.view.frame) - CGRectGetMidY(panningView.bounds);
         
         switch (sender.state) {
             case UIGestureRecognizerStatePossible:
@@ -412,7 +449,6 @@
         if (self.previousViewController) {
             [self animateCardToFrontViewController:self.previousViewController];
             [self removeDimViewToViewController:self.topViewController animated:YES complectionBlock:^{
-                // FIXME: disMiss
                 [self dismissCard];
                 complection();
             }];
@@ -426,6 +462,14 @@
     
 }
 
+
+/**
+ 移除当前控制器的 背景视图
+
+ @param viewController 将要出栈的控制器
+ @param animated 是否动画
+ @param complection 完成回调
+ */
 - (void)removeDimViewToViewController:(UIViewController *)viewController animated:(BOOL)animated complectionBlock:(Complection)complection {
     
     if (!viewController.view.superview) {
@@ -443,6 +487,12 @@
                      }];
 }
 
+
+/**
+ topViewController 的上一个视图控制器的出现动画
+
+ @param viewController 最上层控制器
+ */
 - (void)animateCardToFrontViewController:(UIViewController *)viewController {
     
     double duration = 0.4;
@@ -481,34 +531,15 @@
 
 
 
-- (NSInteger)numberOfCards {
-    
-    return self.viewControllers.count;
-    
-}
 
-- (UIViewController *)topViewController {
-    
-    return self.viewControllers.lastObject;
-    
-}
-
-- (UIViewController *)previousViewController {
-    
-    NSInteger previousCardIndex = self.viewControllers.count - 2;
-    if (previousCardIndex >= 0) {
-        return self.viewControllers[previousCardIndex];
-    }
-    return nil;
-    
-}
-
+/**
+ topViewController 出栈
+ */
 - (void)dismissCard {
     
     if (!(self.topViewController && self.attachmentBehaviors.lastObject && self.topViewController.view.superview)) {
         
         return;
-
     }
     
     UIViewController *viewController = self.topViewController;
@@ -565,7 +596,6 @@
             }
         }];
 
-        // FIXME: 还有一个方法
         [self unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)[viewControllersToUnstack reverseObjectEnumerator] Handle:complection];
         
         
@@ -583,6 +613,11 @@
 
 }
 
+/**
+  将最上层的一个控制器出栈 (topViewController)
+
+ @param complection 出栈后的完成回调
+ */
 - (void)unstackLastViewControllerWithHandle:(Complection)complection {
     
     if (self.attachmentBehaviors.lastObject && self.topViewController) {
@@ -592,18 +627,19 @@
         UIViewController *topController = self.topViewController;
         attachmentBehaviour.anchorPoint = CGPointMake(self.view.center.x, item.center.y + item.bounds.size.height);
         
+        // 如果topViewController 底下还存在控制器 就进行显示动画
         if (self.previousViewController) {
             [self animateCardToFrontViewController:self.previousViewController];
         }
         [self removeDimViewToViewController:topController animated:YES complectionBlock:^{
             [self dismissCard];
-            complection();
+            // FIXME: 会崩溃
+            //complection();
         }];
         
     } else {
         return;
     }
-    
 }
 
 - (void)unstackToRootViewControllerWithHandle:(Complection)complection {
@@ -631,11 +667,11 @@
 
 - (void)unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)selectedControllers Handle:(Complection)complection {
     
-    CGPoint anchorPoint = CGPointMake(self.view.bounds.size.width, self.view.bounds.size.height * 3/2);
+    CGPoint anchorPoint = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height * 3/2);
     
     NSInteger remainingCards = self.numberOfCards - selectedControllers.count;
-    
-    NSMutableArray *behaviours = (NSMutableArray *)[self.attachmentBehaviors subarrayWithRange:NSMakeRange(0, remainingCards)];
+    // FIXME: drop 方法有问题
+    NSMutableArray *behaviours = (NSMutableArray *)[self.attachmentBehaviors subarrayWithRange:NSMakeRange(remainingCards, remainingCards)];
     
     for (UIAttachmentBehavior *behavior in behaviours) {
         behavior.anchorPoint = anchorPoint;
