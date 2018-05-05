@@ -447,36 +447,6 @@
     
 }
 
-
-- (void)unstackLastViewController:(Complection)complection {
-    
-    if (self.attachmentBehaviors.lastObject && self.topViewController) {
-        
-        UIAttachmentBehavior *attachmentBehaviour = self.attachmentBehaviors.lastObject;
-        
-        id<UIDynamicItem> item = attachmentBehaviour.items.lastObject;
-        
-        attachmentBehaviour.anchorPoint = CGPointMake(self.view.center.x, item.center.y + item.bounds.size.height);
-        
-        if (self.previousViewController) {
-            [self animateCardToFrontViewController:self.previousViewController];
-            [self removeDimViewToViewController:self.topViewController animated:YES complectionBlock:^{
-                [self dismissCard];
-                if (complection) {
-                    complection();
-                }
-            }];
-        }
-  
-    } else {
-        return;
-    }
-    
-    
-    
-}
-
-
 /**
  移除当前控制器的 背景视图
 
