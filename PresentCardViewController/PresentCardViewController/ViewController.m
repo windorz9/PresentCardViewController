@@ -14,6 +14,14 @@
 @interface ViewController () <CardViewControllerDelegate>
 
 @property (nonatomic, strong) CardStackViewController *cardStackController;
+@property (weak, nonatomic) IBOutlet UILabel *firstSliderLabel;
+@property (weak, nonatomic) IBOutlet UISlider *firstSlider;
+@property (weak, nonatomic) IBOutlet UILabel *secondSliderLabel;
+@property (weak, nonatomic) IBOutlet UISlider *secondSlider;
+@property (weak, nonatomic) IBOutlet UILabel *thirdSliderLabel;
+@property (weak, nonatomic) IBOutlet UISlider *thirdSlider;
+@property (weak, nonatomic) IBOutlet UILabel *fourthSliderLabel;
+@property (weak, nonatomic) IBOutlet UISlider *fourthSlider;
 
 @end
 
@@ -28,19 +36,21 @@
     
     
 }
-- (IBAction)ClickButton:(UIButton *)sender {
+- (IBAction)tapPress:(UITapGestureRecognizer *)sender {
     
     // 点击唤起控制器
-//    self.cardVC.delegate = self;
-    
+    //    self.cardVC.delegate = self;
     [self presentViewController:self.cardStackController animated:NO completion:nil];
     
     CardViewController *rootVC = [self newController];
     
     rootVC.delegate = self;
     [self.cardStackController stackViewController:rootVC WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:nil];
-
 }
+
+
+
+
 
 - (CardViewController *)newController {
     
