@@ -20,6 +20,12 @@ typedef void(^Complection)(void);
 @end
 @interface CardStackViewController : UIViewController
 
+
+/**
+ 根视图控制器
+ */
+@property (nonatomic, strong) UIViewController *rootViewController;
+
 /**
  第一个卡片视图控制器离 Screen 顶部的距离
  初始化的时候设置一个初始值 UIApplication.shared.statusBarFrame.height
@@ -85,6 +91,7 @@ typedef void(^Complection)(void);
 @property (nonatomic, readonly , strong) UIViewController *topViewController;
 
 @property (nonatomic, weak) id<CardStackViewControllerDelegate> delegate;
+
 
 
 // 初始化方法

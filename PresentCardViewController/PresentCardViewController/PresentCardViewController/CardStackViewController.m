@@ -19,7 +19,6 @@
 
 @property (nonatomic, strong) UIColor *bgColor;
 @property (nonatomic, strong) NSMutableArray<UIViewController *> *viewControllers;
-@property (nonatomic, strong) UIViewController *rootViewController;
 
 @property (nonatomic, strong) UIDynamicAnimator *animator;
 @property (nonatomic, strong) UICollisionBehavior *collisionBehavior;
@@ -67,6 +66,12 @@
     return self;
 }
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    
+    NSAssert(NO, @"这个方法没有被实现");
+    return nil;
+}
+
 
 - (void)viewDidLoad {
     
@@ -82,7 +87,7 @@
     
     if (self.rootViewController) {
         UIViewController *viewController = self.rootViewController;
-        // FIXME: 需要修改
+
         [self stackViewController:viewController WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:nil];
         
     }
@@ -158,6 +163,7 @@
     self.isPresentingCard = NO;
     
     self.initialDraggingPoint = CGPointZero;
+    
 }
 
 #pragma mark 设置视图
@@ -211,10 +217,10 @@
     NSInteger numberOfPreviousCards = self.viewControllers.count - 1;
     
     newContrller.view.frame = [self newControllerFrameFromSize:size previousCards:numberOfPreviousCards];
+
     
     if (roundedCorners) {
         newContrller.view.layer.mask = [self maskLayerWithBounds:newContrller.view.bounds];
-        
     }
     [newContrller.view addGestureRecognizer:self.panGestureRecognizer];
     
@@ -228,8 +234,9 @@
         [self attachView:newContrller.view ToAnchorPoint:CGPointMake(self.view.center.x, anchorY)];
         [self.collisionBehavior addItem:newContrller.view];
         
+        
     }];
-    
+ 
 }
 
 - (void)animateCurrentCardBackToPresentNextOne {
@@ -300,7 +307,7 @@
     CGFloat viewWidth = self.view.bounds.size.width;
     
 
-    if ([NSValue valueWithCGSize:size] != [NSValue valueWithCGSize:CGSizeZero]) {
+    if (!CGSizeEqualToSize(size, CGSizeZero)) {
         
         return CGRectMake(0, viewHeight, size.width, size.height);
         

@@ -8,8 +8,12 @@
 
 #import "ViewController.h"
 #import "Helpers.h"
+#import "CardStackViewController.h"
+#import "CardViewController.h"
 
-@interface ViewController ()
+@interface ViewController () <CardViewControllerDelegate>
+
+@property (nonatomic, strong) CardStackViewController *cardStackController;
 
 @end
 
@@ -19,8 +23,54 @@
     
     [super viewDidLoad];
     
+    self.cardStackController = [[CardStackViewController alloc] init];
+    
+    
     
 }
+- (IBAction)ClickButton:(UIButton *)sender {
+    
+    // 点击唤起控制器
+//    self.cardVC.delegate = self;
+    
+    [self presentViewController:self.cardStackController animated:NO completion:nil];
+    
+    CardViewController *rootVC = [self newController];
+    
+    rootVC.delegate = self;
+    [self.cardStackController stackViewController:rootVC WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:nil];
+
+}
+
+- (CardViewController *)newController {
+    
+    return [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"CardViewController"];
+}
+
+#pragma mark CardViewController Delegate
+- (void)dismissAllCards {
+    
+    [self.cardStackController unstackAllViewControllersWithHandle:nil];
+    
+}
+
+- (void)disMiss {
+    
+    [self.cardStackController unstackLastViewControllerWithHandle:nil];
+    
+}
+
+- (void)stackAnotherCard {
+    
+    CardViewController *cardVC = [self newController];
+    cardVC.delegate = self;
+    [self.cardStackController stackViewController:cardVC WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:^{
+        NSLog(@"Complection Block");
+    }];
+    
+    
+}
+
 
 
 

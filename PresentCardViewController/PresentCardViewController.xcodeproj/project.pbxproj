@@ -11,6 +11,8 @@
 		260F0D252099BF6A00A82F82 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 260F0D242099BF6A00A82F82 /* UIView+Extension.m */; };
 		260F0D282099DAE200A82F82 /* CardStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 260F0D272099DAE200A82F82 /* CardStackViewController.m */; };
 		260F0D2B209A9E3A00A82F82 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 260F0D2A209A9E3A00A82F82 /* Constants.m */; };
+		260F0D34209B546900A82F82 /* UIColor+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 260F0D33209B546900A82F82 /* UIColor+Extension.m */; };
+		260F0D37209CA37100A82F82 /* CardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 260F0D36209CA37100A82F82 /* CardViewController.m */; };
 		261E702F2099BB2D00BFA79C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 261E702E2099BB2D00BFA79C /* AppDelegate.m */; };
 		261E70322099BB2D00BFA79C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 261E70312099BB2D00BFA79C /* ViewController.m */; };
 		261E70352099BB2D00BFA79C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 261E70332099BB2D00BFA79C /* Main.storyboard */; };
@@ -28,6 +30,10 @@
 		260F0D272099DAE200A82F82 /* CardStackViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CardStackViewController.m; sourceTree = "<group>"; };
 		260F0D29209A9E3A00A82F82 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		260F0D2A209A9E3A00A82F82 /* Constants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		260F0D32209B546900A82F82 /* UIColor+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Extension.h"; sourceTree = "<group>"; };
+		260F0D33209B546900A82F82 /* UIColor+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Extension.m"; sourceTree = "<group>"; };
+		260F0D35209CA37100A82F82 /* CardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CardViewController.h; sourceTree = "<group>"; };
+		260F0D36209CA37100A82F82 /* CardViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CardViewController.m; sourceTree = "<group>"; };
 		261E702A2099BB2D00BFA79C /* PresentCardViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PresentCardViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		261E702D2099BB2D00BFA79C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		261E702E2099BB2D00BFA79C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -56,6 +62,8 @@
 			children = (
 				260F0D202099BC3900A82F82 /* Helpers.h */,
 				260F0D212099BC3900A82F82 /* Helpers.m */,
+				260F0D32209B546900A82F82 /* UIColor+Extension.h */,
+				260F0D33209B546900A82F82 /* UIColor+Extension.m */,
 				260F0D232099BF6A00A82F82 /* UIView+Extension.h */,
 				260F0D242099BF6A00A82F82 /* UIView+Extension.m */,
 				260F0D262099DAE200A82F82 /* CardStackViewController.h */,
@@ -89,6 +97,8 @@
 				261E702E2099BB2D00BFA79C /* AppDelegate.m */,
 				261E70302099BB2D00BFA79C /* ViewController.h */,
 				261E70312099BB2D00BFA79C /* ViewController.m */,
+				260F0D35209CA37100A82F82 /* CardViewController.h */,
+				260F0D36209CA37100A82F82 /* CardViewController.m */,
 				260F0D1F2099BB9400A82F82 /* PresentCardViewController */,
 				261E70332099BB2D00BFA79C /* Main.storyboard */,
 				261E70362099BB2E00BFA79C /* Assets.xcassets */,
@@ -172,7 +182,9 @@
 				260F0D252099BF6A00A82F82 /* UIView+Extension.m in Sources */,
 				261E70322099BB2D00BFA79C /* ViewController.m in Sources */,
 				261E703D2099BB2E00BFA79C /* main.m in Sources */,
+				260F0D34209B546900A82F82 /* UIColor+Extension.m in Sources */,
 				261E702F2099BB2D00BFA79C /* AppDelegate.m in Sources */,
+				260F0D37209CA37100A82F82 /* CardViewController.m in Sources */,
 				260F0D222099BC3900A82F82 /* Helpers.m in Sources */,
 				260F0D2B209A9E3A00A82F82 /* Constants.m in Sources */,
 				260F0D282099DAE200A82F82 /* CardStackViewController.m in Sources */,
@@ -318,6 +330,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 26Z2MG3ME2;
 				INFOPLIST_FILE = PresentCardViewController/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -335,6 +348,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 26Z2MG3ME2;
 				INFOPLIST_FILE = PresentCardViewController/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
