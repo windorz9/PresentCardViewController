@@ -48,10 +48,6 @@
     [self.cardStackController stackViewController:rootVC WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:nil];
 }
 
-
-
-
-
 - (CardViewController *)newController {
     
     return [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"CardViewController"];

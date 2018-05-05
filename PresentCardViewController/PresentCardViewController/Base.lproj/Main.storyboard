@@ -211,15 +211,18 @@
                             <constraint firstItem="GSj-Tg-aog" firstAttribute="top" secondItem="QSV-Qn-18G" secondAttribute="bottom" constant="20" id="q92-st-Qkk"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RZD-mI-Jda"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Q3J-jE-6cp" appends="YES" id="YG6-Ov-5pb"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="view" destination="AfH-qJ-BIl" id="J6m-ZR-bpQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iVN-Sb-RT5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="3pL-4K-FOF">
+                <tapGestureRecognizer id="Q3J-jE-6cp">
                     <connections>
-                        <action selector="tapWithSender:" destination="7rI-oe-W9U" id="6gf-Kc-FcE"/>
+                        <action selector="tap:" destination="7rI-oe-W9U" id="fLg-Jc-c15"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

@@ -20,6 +20,11 @@
     
     self.view.backgroundColor = [UIColor randomColor];
 }
+- (IBAction)tap:(id)sender {
+    
+    [self.delegate stackAnotherCard];
+
+}
 
 - (IBAction)dismissAllcards:(UIButton *)sender {
     [self.delegate dismissAllCards];
@@ -30,11 +35,6 @@
 
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self.delegate stackAnotherCard];
-    
-    
-}
 
 
 - (void)didReceiveMemoryWarning {

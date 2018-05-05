@@ -420,7 +420,16 @@
                 
                 [self.dynamicItemBehavior addLinearVelocity:velocity forItem:panningView];
                 
-                BOOL shouldDismiss = [self.delegate shouldDismiss:self.topViewController];
+                BOOL shouldDismiss;
+                if ([self.delegate respondsToSelector:@selector(shouldDismiss:)]) {
+                    shouldDismiss = [self.delegate shouldDismiss:self.topViewController];
+                } else {
+                    shouldDismiss = YES;
+                }
+
+                
+                
+                NSLog(@"%f  %d", [sender translationInView: self.view].y, shouldDismiss);
                 
                 if (([sender translationInView: self.view].y > dragLimitToDismiss) && shouldDismiss) {
                     [self unstackLastViewController:nil];
@@ -452,7 +461,9 @@
             [self animateCardToFrontViewController:self.previousViewController];
             [self removeDimViewToViewController:self.topViewController animated:YES complectionBlock:^{
                 [self dismissCard];
-                complection();
+                if (complection) {
+                    complection();
+                }
             }];
         }
   
