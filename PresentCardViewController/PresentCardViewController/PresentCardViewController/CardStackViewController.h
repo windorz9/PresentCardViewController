@@ -99,16 +99,54 @@ typedef void(^Complection)(void);
 
 - (instancetype)init;
 
+/**
+ 新的卡片控制器入栈
+ 
+ @param newContrller 想要 present 的控制器
+ @param size 是否需要设置特殊的 size 默认 CGSizeZero
+ @param roundedCorners 视图的上右 和上左 是否圆角显示 默认 yes
+ @param isDraggable 是否可以用手指上下垂直拉动控制器 默认 yes
+ @param color CardController 每个会加一个 假的self.view 给一个设置好的颜色, 默认是 present 的视图控制器的 bgColor
+ @param complectionBlock 完成回调
+ */
 - (void)stackViewController:(UIViewController *)newContrller WithSize:(CGSize)size WithRoundedTopCorners:(BOOL)roundedCorners draggable:(BOOL)isDraggable BottomBackgroundColor:(UIColor *)color Complection:(Complection)complectionBlock;
 
 
+/**
+ 将最上层的一个控制器出栈 (topViewController)
+ 
+ @param complection 出栈后的完成回调
+ */
 - (void)unstackLastViewControllerWithHandle:(Complection)complection;
 
+/**
+ 将当前数组里面的所有的控制器出栈
+ 
+ @param complection 完成回调
+ */
 - (void)unstackAllViewControllersWithHandle:(Complection)complection;
 
+/**
+ 指定一个self.viewControllers 里面的控制器 然后将它和它后面的控制器全部出栈
+ 
+ @param viewController 需要出栈的控制器
+ @param complection 完成回调
+ */
 - (void)unstackToViewController:(UIViewController *)viewController ComplectionHandle:(Complection)complection;
 
+
+/**
+ 指定出栈的控制器个数
+ 
+ @param numberOfCards 控制器个数
+ @param complection 完成回调.
+ */
 - (void)unstackLast:(NSInteger)numberOfCards ComplectionHandle:(Complection)complection;
 
+/**
+ 将 rootVC 后面的全部出栈, 只保留一个 rootVC
+ 
+ @param complection 完成回调
+ */
 - (void)unstackToRootViewControllerWithHandle:(Complection)complection;
 @end

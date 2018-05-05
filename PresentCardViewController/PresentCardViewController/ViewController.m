@@ -50,13 +50,14 @@
 #pragma mark CardViewController Delegate
 - (void)dismissAllCards {
     
-    [self.cardStackController unstackAllViewControllersWithHandle:nil];
-    
+     [self.cardStackController unstackAllViewControllersWithHandle:nil];
 }
 
 - (void)disMiss {
     
-    [self.cardStackController unstackLastViewControllerWithHandle:nil];
+    [self.cardStackController unstackLastViewControllerWithHandle:^{
+        NSLog(@"disMiss complection");
+    }];
     
 }
 
@@ -67,7 +68,6 @@
     [self.cardStackController stackViewController:cardVC WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:^{
         NSLog(@"Complection Block");
     }];
-    
     
 }
 

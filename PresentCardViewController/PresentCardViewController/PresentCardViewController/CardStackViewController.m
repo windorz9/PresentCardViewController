@@ -241,7 +241,9 @@
         self.rootViewController = newContrller;
     }
     self.panGestureRecognizer.enabled = isDraggable;
-    self.stackCompletionBlock = complectionBlock;
+    if (complectionBlock) {
+        self.stackCompletionBlock = complectionBlock;
+    }
     self.isPresentingCard = YES;
     
     [self animateCurrentCardBackToPresentNextOne];
@@ -584,29 +586,47 @@
 }
 
 #pragma mark 外界调用出栈
+/**
+ 指定出栈的控制器个数
+
+ @param numberOfCards 控制器个数
+ @param complection 完成回调.
+ */
 - (void)unstackLast:(NSInteger)numberOfCards ComplectionHandle:(Complection)complection {
     
-    if (numberOfCards <= self.viewControllers.count) {
+    if (numberOfCards < self.numberOfCards) {
         
         NSMutableArray *viewControllersToUnstack = [NSMutableArray<UIViewController *> array];
         
+        
         [self.viewControllers enumerateObjectsWithOptions:(NSEnumerationOptions)NSEnumerationReverse usingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (idx < numberOfCards) {
+
+            if (idx > (self.numberOfCards - numberOfCards - 1)) {
+
                 [viewControllersToUnstack addObject:obj];
             }
         }];
 
-        [self unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)[viewControllersToUnstack reverseObjectEnumerator] Handle:complection];
+         [self unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)viewControllersToUnstack Handle:complection];
         
         
     } else {
-        NSAssert(NO, @"numberOfCards 必须小于 viewControllers 的 count");
+        // 解决方案一: 强制报错
+//        NSAssert(NO, @"numberOfCards 必须小于 viewControllers 的 count");
+        // 解决方案二:  全部控制器出栈 -- 推荐
+        [self unstackAllViewControllersWithHandle:complection];
         return;
     }
     
 }
 
 
+
+/**
+ 将当前数组里面的所有的控制器出栈
+
+ @param complection 完成回调
+ */
 - (void)unstackAllViewControllersWithHandle:(Complection)complection {
     
     [self unstackSelectedViewControllers:self.viewControllers Handle:complection];
@@ -633,8 +653,9 @@
         }
         [self removeDimViewToViewController:topController animated:YES complectionBlock:^{
             [self dismissCard];
-            // FIXME: 会崩溃
-            //complection();
+            if (complection) {
+                complection();
+            }
         }];
         
     } else {
@@ -642,6 +663,13 @@
     }
 }
 
+
+
+/**
+ 将 rootVC 后面的全部出栈, 只保留一个 rootVC
+
+ @param complection 完成回调
+ */
 - (void)unstackToRootViewControllerWithHandle:(Complection)complection {
     
     [self unstackLast:self.viewControllers.count - 1 ComplectionHandle:complection];
@@ -649,6 +677,13 @@
     
 }
 
+
+/**
+ 指定一个self.viewControllers 里面的控制器 然后将它和它后面的控制器全部出栈
+
+ @param viewController 需要出栈的控制器
+ @param complection 完成回调
+ */
 - (void)unstackToViewController:(UIViewController *)viewController ComplectionHandle:(Complection)complection {
     
     if (![self.viewControllers indexOfObject: viewController]) {
@@ -665,13 +700,20 @@
     
 }
 
+
+
+/**
+ 传入一个控制器的数组, 并将其全部进行出栈
+
+ @param selectedControllers 目标控制器数组
+ @param complection 完成回调.
+ */
 - (void)unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)selectedControllers Handle:(Complection)complection {
     
     CGPoint anchorPoint = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height * 3/2);
     
     NSInteger remainingCards = self.numberOfCards - selectedControllers.count;
-    // FIXME: drop 方法有问题
-    NSMutableArray *behaviours = (NSMutableArray *)[self.attachmentBehaviors subarrayWithRange:NSMakeRange(remainingCards, remainingCards)];
+    NSMutableArray *behaviours = (NSMutableArray *)[self.attachmentBehaviors subarrayWithRange:NSMakeRange(remainingCards, self.numberOfCards - remainingCards)];
     
     for (UIAttachmentBehavior *behavior in behaviours) {
         behavior.anchorPoint = anchorPoint;
@@ -691,16 +733,13 @@
             
             UIViewController *topVC = self.viewControllers[index];
             [self animateCardToFrontViewController:topVC];
-            complection();
+            if (complection) {
+                complection();
+            }
         }
     }];
     
-    
-    
-    
 }
-
-
 
 #pragma mark UIDynamicAnimatorDelegate
 - (void)dynamicAnimatorDidPause:(UIDynamicAnimator *)animator {
@@ -712,13 +751,15 @@
         if ([self.delegate respondsToSelector:@selector(didFinishStacking:)]) {
             
             [self.delegate didFinishStacking:self.topViewController];
+
+        }
+        if (self.stackCompletionBlock) {
             self.stackCompletionBlock();
         }
         
     } else {
         return;
     }
-    
     
 }
 
