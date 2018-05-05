@@ -13,18 +13,22 @@
 #import "UIView+Extension.h"
 #import "Constants.h"
 
-//typedef void(^Complection)(void);
 
 @interface CardStackViewController () <UIDynamicAnimatorDelegate>
 
 @property (nonatomic, strong) UIColor *bgColor;
 @property (nonatomic, strong) NSMutableArray<UIViewController *> *viewControllers;
 // 声明动画相关属性
+// 运动管理
 @property (nonatomic, strong) UIDynamicAnimator *animator;
+// 碰撞
 @property (nonatomic, strong) UICollisionBehavior *collisionBehavior;
-@property (nonatomic, strong) NSMutableArray<UIAttachmentBehavior *> *attachmentBehaviors;
+// 依附动画
 @property (nonatomic, strong) UIDynamicItemBehavior *dynamicItemBehavior;
+
 @property (nonatomic, strong) UIAttachmentBehavior *panAttachmentBehavior;
+
+@property (nonatomic, strong) NSMutableArray<UIAttachmentBehavior *> *attachmentBehaviors;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 
 @property (nonatomic, assign) BOOL isPresentingCard; // 默认为 false
@@ -143,9 +147,7 @@
         if (vc.view.layer.mask != nil) {
             vc.view.layer.mask = [self maskLayerWithBounds:vc.view.bounds];
         }
-        
     }
-    
 }
 
 - (CAShapeLayer *)maskLayerWithBounds:(CGRect)bounds {
@@ -155,7 +157,7 @@
     CGRect rect = CGRectMake(0, 0, bounds.size.width, bounds.size.height + fakeViewHeight);
     rect.origin = CGPointZero;
     // UIRectCornerTopRight && UIRectCornerTopLeft
-    layer.path = [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerTopRight | UIRectCornerTopLeft cornerRadii:CGSizeMake(topCornerRadius, topCornerRadius)] CGPath];
+    layer.path = [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners: UIRectCornerTopRight | UIRectCornerTopLeft cornerRadii:CGSizeMake(topCornerRadius, topCornerRadius)] CGPath];
     
     return layer;
 }
@@ -168,7 +170,7 @@
     
     self.bgColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
     
-    self.topOffsetBetweenCards = 10.0;
+    self.topOffsetBetweenCards = 20.0;
     
     self.cardDelay = 0.1;
     
@@ -211,10 +213,10 @@
     self.collisionBehavior.collisionMode = UICollisionBehaviorModeBoundaries;
     [self.collisionBehavior addBoundaryWithIdentifier:@"leftMargin" fromPoint:CGPointMake(-0.5, 0) toPoint:CGPointMake(-0.5, CGRectGetMaxY(self.view.bounds))];
     
-    [self.collisionBehavior addBoundaryWithIdentifier:@"rightMargin" fromPoint:CGPointMake(CGRectGetMaxX(self.view.bounds) + 0.5, 0) toPoint:CGPointMake(CGRectGetMaxX(self.view.bounds), CGRectGetMaxY(self.view.bounds))];
+    [self.collisionBehavior addBoundaryWithIdentifier:@"rightMargin" fromPoint:CGPointMake(CGRectGetMaxX(self.view.bounds) + 0.5, 0) toPoint:CGPointMake(CGRectGetMaxX(self.view.bounds) + 0.5, CGRectGetMaxY(self.view.bounds))];
     
-    [self.animator addBehavior:self.dynamicItemBehavior];
-    [self.animator addBehavior:self.collisionBehavior];
+     [self.animator addBehavior:self.dynamicItemBehavior];
+     [self.animator addBehavior:self.collisionBehavior];
     
 }
 
@@ -346,6 +348,7 @@
     CGFloat viewHeight = self.view.bounds.size.height;
     CGFloat viewWidth = self.view.bounds.size.width;
     
+    
 
     if (!CGSizeEqualToSize(size, CGSizeZero)) {
         
@@ -359,6 +362,8 @@
 }
 
 
+//FIXME: 问题可能在这里
+// 添加吸附动画
 - (void)attachView:(UIView *)aView ToAnchorPoint:(CGPoint)anchorPoint {
     
     UIAttachmentBehavior *attachmentBehaviour = [[UIAttachmentBehavior alloc] initWithItem:aView attachedToAnchor:anchorPoint];
@@ -385,13 +390,18 @@
 - (void)handlePan:(UIPanGestureRecognizer *)sender {
     
     if (self.topViewController && [self.attachmentBehaviors lastObject]) {
+        // 获取到最顶层的视图
         UIView *panningView = self.topViewController.view;
+        // 获取当前这个视图的吸附动画
         UIAttachmentBehavior *currentAttachmentBehaviour = [self.attachmentBehaviors lastObject];
+        // 获取当前这个 topVC 控制器的黑色的背景 superView.
         UIView *currentDimView = panningView.superview;
-        
+        // 获取当前手指触碰的初始位置 相较于当前 self 控制器
         CGPoint panLocationInView = [sender locationInView:self.view];
+        
+        // 获取初始的锚点
         CGFloat defaultAnchorPointX = currentAttachmentBehaviour.anchorPoint.x;
-        CGFloat defaultAnchorPointY = CGRectGetMaxY(self.view.frame) - CGRectGetMidY(panningView.bounds);
+        CGFloat defaultAnchorPointY = CGRectGetMaxY(self.view.bounds) - CGRectGetMidY(panningView.bounds);
         
         switch (sender.state) {
             case UIGestureRecognizerStatePossible:
@@ -431,7 +441,6 @@
                 NSLog(@"%f  %d", [sender translationInView: self.view].y, shouldDismiss);
                 
                 if (([sender translationInView: self.view].y > dragLimitToDismiss) && shouldDismiss) {
-//                    [self unstackLastViewController:nil];
                     [self unstackLastViewControllerWithHandle:nil];
                 } else {
                     [UIView animateWithDuration:dimDuration animations:^{
