@@ -409,6 +409,7 @@
                 
                 CGFloat alphaPercentage = MIN(0.4, percentageDragged - 0.6);
                 currentDimView.backgroundColor = [self.bgColor colorWithAlphaComponent:alphaPercentage];
+                // currentDimView.backgroundColor = self.topViewController.view.backgroundColor;
                 break;
             }
             case UIGestureRecognizerStateEnded:
@@ -427,12 +428,11 @@
                     shouldDismiss = YES;
                 }
 
-                
-                
                 NSLog(@"%f  %d", [sender translationInView: self.view].y, shouldDismiss);
                 
                 if (([sender translationInView: self.view].y > dragLimitToDismiss) && shouldDismiss) {
-                    [self unstackLastViewController:nil];
+//                    [self unstackLastViewController:nil];
+                    [self unstackLastViewControllerWithHandle:nil];
                 } else {
                     [UIView animateWithDuration:dimDuration animations:^{
                         currentDimView.backgroundColor = self.bgColor;
@@ -446,6 +446,7 @@
     
     
 }
+
 
 - (void)unstackLastViewController:(Complection)complection {
     
