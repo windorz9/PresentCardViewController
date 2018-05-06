@@ -57,7 +57,7 @@ typedef void(^Complection)(void);
 @property (nonatomic, assign) CGFloat verticalTranslation;
 
 /**
- 是否能拖动卡片控制器
+ 是否开启弹簧效果
  默认是 Yes
  */
 @property (nonatomic, assign) BOOL bounces;

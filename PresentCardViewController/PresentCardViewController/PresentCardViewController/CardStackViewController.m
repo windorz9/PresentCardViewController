@@ -341,8 +341,6 @@
     
     [view addSubview:fakeView];
 
-    NSLog(@"%@", [NSValue valueWithCGRect:view.frame]);
-    
     // 添加约束
     // 左边
     NSLayoutConstraint *leftContraint = [NSLayoutConstraint constraintWithItem:fakeView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0];
@@ -456,8 +454,6 @@
                 } else {
                     shouldDismiss = YES;
                 }
-
-                NSLog(@"%f  %d", [sender translationInView: self.view].y, shouldDismiss);
                 
                 if (([sender translationInView: self.view].y > dragLimitToDismiss) && shouldDismiss) {
                     [self unstackLastViewControllerWithHandle:nil];
