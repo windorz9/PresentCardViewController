@@ -14,6 +14,7 @@
 @interface ViewController () <CardViewControllerDelegate>
 
 @property (nonatomic, strong) CardStackViewController *cardStackController;
+// 调整缩放的比例 默认 0.95
 @property (weak, nonatomic) IBOutlet UILabel *firstSliderLabel;
 @property (weak, nonatomic) IBOutlet UISlider *firstSlider;
 @property (weak, nonatomic) IBOutlet UILabel *secondSliderLabel;
@@ -32,7 +33,7 @@
     [super viewDidLoad];
     
     self.cardStackController = [[CardStackViewController alloc] init];
-    
+
     
     
 }
@@ -42,10 +43,30 @@
     //    self.cardVC.delegate = self;
     [self presentViewController:self.cardStackController animated:NO completion:nil];
     
+    // 设置初始值
+    // 缩放倍数
+    self.cardStackController.cardScaleFactor = self.firstSlider.value;
+    // 距离顶部距离
+    self.cardStackController.firstCardTopOffset = self.secondSlider.value;
+    // 卡片控制器之间的距离
+    self.cardStackController.topOffsetBetweenCards = self.thirdSlider.value;
+    // topViewController 变化时, 上一个 TopVC 会进入背景当中, 进入后的移动距离
+    self.cardStackController.verticalTranslation = self.fourthSlider.value;
+    
+    
     CardViewController *rootVC = [self newController];
     
     rootVC.delegate = self;
     [self.cardStackController stackViewController:rootVC WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:nil];
+}
+- (IBAction)sliderValueChange:(UISlider *)sender {
+    
+    self.firstSliderLabel.text = [NSString stringWithFormat:@"%.02f", self.firstSlider.value];
+    self.secondSliderLabel.text = [NSString stringWithFormat:@"%.02f", self.secondSlider.value];
+    
+    self.thirdSliderLabel.text = [NSString stringWithFormat:@"%.02f", self.thirdSlider.value];
+    self.fourthSliderLabel.text = [NSString stringWithFormat:@"%.02f", self.fourthSlider.value];
+    
 }
 
 - (CardViewController *)newController {

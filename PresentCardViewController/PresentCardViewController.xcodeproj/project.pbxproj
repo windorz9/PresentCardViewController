@@ -74,6 +74,17 @@
 			path = PresentCardViewController;
 			sourceTree = "<group>";
 		};
+		260F0D38209E8F0700A82F82 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				261E70302099BB2D00BFA79C /* ViewController.h */,
+				261E70312099BB2D00BFA79C /* ViewController.m */,
+				260F0D35209CA37100A82F82 /* CardViewController.h */,
+				260F0D36209CA37100A82F82 /* CardViewController.m */,
+			);
+			path = Example;
+			sourceTree = "<group>";
+		};
 		261E70212099BB2D00BFA79C = {
 			isa = PBXGroup;
 			children = (
@@ -95,10 +106,7 @@
 			children = (
 				261E702D2099BB2D00BFA79C /* AppDelegate.h */,
 				261E702E2099BB2D00BFA79C /* AppDelegate.m */,
-				261E70302099BB2D00BFA79C /* ViewController.h */,
-				261E70312099BB2D00BFA79C /* ViewController.m */,
-				260F0D35209CA37100A82F82 /* CardViewController.h */,
-				260F0D36209CA37100A82F82 /* CardViewController.m */,
+				260F0D38209E8F0700A82F82 /* Example */,
 				261E70332099BB2D00BFA79C /* Main.storyboard */,
 				260F0D1F2099BB9400A82F82 /* PresentCardViewController */,
 				261E70362099BB2E00BFA79C /* Assets.xcassets */,

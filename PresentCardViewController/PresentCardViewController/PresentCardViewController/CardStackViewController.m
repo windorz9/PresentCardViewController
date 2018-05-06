@@ -250,6 +250,7 @@
     
     [self animateCurrentCardBackToPresentNextOne];
     
+    // 创建背景视图 和 self.view.bounds 等大
     UIView *containerView = [self createContainerDimView];
     
     [self addChildViewController:newContrller ContainView:containerView fakeViewBackgroundColor:color];
@@ -280,6 +281,10 @@
  
 }
 
+
+/**
+ 当前卡片退出后面, 显示当前顶上的 Card 动画
+ */
 - (void)animateCurrentCardBackToPresentNextOne {
     
     if (!self.topViewController) {
@@ -302,6 +307,7 @@
 }
 
 // 创建背景模糊视图
+// 后面大的显示视图 做背景用.
 - (UIView *)createContainerDimView {
     
     UIView *containerView = [[UIView alloc] init];
@@ -326,21 +332,35 @@
 
 }
 
+// 添加屏幕外的 fakeBottom 视图
 - (void)addFakeBottomViewUnderneath:(UIView *)view WithBackgroundColor:(UIColor *)backgroundColor {
     
     UIView *fakeView = [[UIView alloc] init];
     fakeView.translatesAutoresizingMaskIntoConstraints = NO;
-    if (!backgroundColor) {
-        fakeView.backgroundColor = view.backgroundColor;
-    } else {
-        fakeView.backgroundColor = backgroundColor;
-    }
-    [view addSubview:fakeView];
-    [fakeView pinTopToBottomOf:view Constant:0];
-    [fakeView pinLeadingToLeadingOf:view Constant:0];
-    [fakeView pinTrailingToTrailingOf:view Constant:0];
-    [fakeView setHeightToConstant:fakeViewHeight];
+    fakeView.backgroundColor = view.backgroundColor;
     
+    [view addSubview:fakeView];
+
+    NSLog(@"%@", [NSValue valueWithCGRect:view.frame]);
+    
+    // 添加约束
+    // 左边
+    NSLayoutConstraint *leftContraint = [NSLayoutConstraint constraintWithItem:fakeView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0];
+    // 右边
+    NSLayoutConstraint *rightContraint = [NSLayoutConstraint constraintWithItem:fakeView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0];
+
+    // 上对 view 底部对齐
+    NSLayoutConstraint *topContraint = [NSLayoutConstraint constraintWithItem:fakeView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+
+    // 设置高度
+    NSLayoutConstraint *heightContrain = [NSLayoutConstraint constraintWithItem:fakeView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:fakeViewHeight];
+
+    [view addConstraint:leftContraint];
+    [view addConstraint:rightContraint];
+    [view addConstraint:topContraint];
+    [view addConstraint:heightContrain];
+
+
 }
 
 - (CGRect)newControllerFrameFromSize:(CGSize)size previousCards:(NSInteger)previousCards {
@@ -362,7 +382,6 @@
 }
 
 
-//FIXME: 问题可能在这里
 // 添加吸附动画
 - (void)attachView:(UIView *)aView ToAnchorPoint:(CGPoint)anchorPoint {
     

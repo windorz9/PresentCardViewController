@@ -35,9 +35,12 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="114" id="xF9-GY-R8X"/>
                                 </constraints>
+                                <connections>
+                                    <action selector="sliderValueChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="Hef-PZ-t29"/>
+                                </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="放大系数" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NZc-5r-9TK">
-                                <rect key="frame" x="8" y="447" width="70" height="29"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="缩放的放大系数" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NZc-5r-9TK">
+                                <rect key="frame" x="8" y="447" width="122" height="29"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -48,20 +51,26 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vtr-5n-BW9">
-                                <rect key="frame" x="224" y="506" width="21" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vtr-5n-BW9">
+                                <rect key="frame" x="200.5" y="506" width="44.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minValue="0.0" maxValue="40" translatesAutoresizingMaskIntoConstraints="NO" id="mW6-8C-BLS">
                                 <rect key="frame" x="251" y="501" width="118" height="31"/>
+                                <connections>
+                                    <action selector="sliderValueChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="O1d-8h-SpU"/>
+                                </connections>
                             </slider>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minValue="0.0" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="3xl-h7-Ol4">
                                 <rect key="frame" x="251" y="556" width="118" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="114" id="9Ye-xa-fai"/>
                                 </constraints>
+                                <connections>
+                                    <action selector="sliderValueChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="og7-B8-gmx"/>
+                                </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="两个卡片间的距离" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fLU-xN-cYq">
                                 <rect key="frame" x="8" y="561" width="139" height="21"/>
@@ -69,23 +78,26 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t4D-KM-pcS">
-                                <rect key="frame" x="224" y="561" width="21" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t4D-KM-pcS">
+                                <rect key="frame" x="200.5" y="561" width="44.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="垂直距离" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iaf-LB-AiO">
-                                <rect key="frame" x="8" y="616" width="70" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="缩放的垂直距离" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iaf-LB-AiO">
+                                <rect key="frame" x="8" y="616" width="122" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="-20" minValue="-30" maxValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="uFu-bI-aYj">
                                 <rect key="frame" x="251" y="611" width="118" height="31"/>
+                                <connections>
+                                    <action selector="sliderValueChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="n8N-fQ-CBr"/>
+                                </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eje-wZ-wwE">
-                                <rect key="frame" x="217" y="616" width="28" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-20.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eje-wZ-wwE">
+                                <rect key="frame" x="193" y="616" width="52" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -110,7 +122,7 @@
                             <constraint firstItem="V3z-Lm-Sq7" firstAttribute="bottom" secondItem="NZc-5r-9TK" secondAttribute="bottom" id="Fr5-cs-xiJ"/>
                             <constraint firstItem="V3z-Lm-Sq7" firstAttribute="top" secondItem="c9k-ka-qsZ" secondAttribute="bottom" constant="93" id="GrB-Me-bkd"/>
                             <constraint firstItem="uFu-bI-aYj" firstAttribute="leading" secondItem="eje-wZ-wwE" secondAttribute="trailing" constant="8" id="HVo-lS-Ugj"/>
-                            <constraint firstItem="lJD-VA-uY2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="NZc-5r-9TK" secondAttribute="trailing" constant="100" id="J5G-g9-NGf"/>
+                            <constraint firstItem="lJD-VA-uY2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="NZc-5r-9TK" secondAttribute="trailing" constant="8" id="J5G-g9-NGf"/>
                             <constraint firstItem="mW6-8C-BLS" firstAttribute="top" secondItem="V3z-Lm-Sq7" secondAttribute="bottom" constant="25" id="P3Z-QV-7I2"/>
                             <constraint firstItem="3xl-h7-Ol4" firstAttribute="top" secondItem="mW6-8C-BLS" secondAttribute="bottom" constant="25" id="Qla-lQ-sBG"/>
                             <constraint firstItem="uFu-bI-aYj" firstAttribute="trailing" secondItem="3xl-h7-Ol4" secondAttribute="trailing" id="Rz4-ey-O0v"/>
@@ -155,7 +167,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="144.80000000000001" y="53.523238380809602"/>
+            <point key="canvasLocation" x="-276" y="-139"/>
         </scene>
         <!--Card View Controller-->
         <scene sceneID="ksI-iy-QlY">
@@ -226,7 +238,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="777" y="54"/>
+            <point key="canvasLocation" x="735" y="-9"/>
         </scene>
     </scenes>
 </document>

@@ -56,11 +56,11 @@
 
 - (void)pinTopToBottomOf:(UIView *)view Constant:(CGFloat)constant {
     
-    [NSLayoutConstraint constraintWithItem:view
-                                 attribute:NSLayoutAttributeBottom
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:self
+    [NSLayoutConstraint constraintWithItem:self
                                  attribute:NSLayoutAttributeTop
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:view
+                                 attribute:NSLayoutAttributeBottom
                                 multiplier:1.0
                                   constant:constant].shouldBeArchived = YES;
     
