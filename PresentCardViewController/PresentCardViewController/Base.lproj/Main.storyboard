@@ -194,19 +194,25 @@
                                     <action selector="dismissAllcards:" destination="7rI-oe-W9U" eventType="touchUpInside" id="KHz-Np-63e"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mIW-zA-MKF">
-                                <rect key="frame" x="320" y="36" width="39" height="30"/>
-                                <state key="normal" title="Close"/>
-                                <connections>
-                                    <action selector="Close:" destination="7rI-oe-W9U" eventType="touchUpInside" id="SxK-mJ-6om"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.60000002384185791" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cards can also be dismissed by drag them down" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nme-bj-q5k">
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.60000002384185791" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="下拉也可以移除当前控制器" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nme-bj-q5k">
                                 <rect key="frame" x="16" y="629" width="343" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.60000002384185802" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="上拉弹簧效果" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DK7-Bg-uqV">
+                                <rect key="frame" x="16" y="40" width="343" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mIW-zA-MKF">
+                                <rect key="frame" x="328" y="36" width="31" height="30"/>
+                                <state key="normal" title="关闭"/>
+                                <connections>
+                                    <action selector="Close:" destination="7rI-oe-W9U" eventType="touchUpInside" id="SxK-mJ-6om"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -214,10 +220,13 @@
                             <constraint firstItem="GSj-Tg-aog" firstAttribute="centerX" secondItem="AfH-qJ-BIl" secondAttribute="centerX" id="CAL-hd-KfD"/>
                             <constraint firstItem="nme-bj-q5k" firstAttribute="leading" secondItem="AfH-qJ-BIl" secondAttribute="leading" constant="16" id="D6Y-To-XUT"/>
                             <constraint firstAttribute="trailing" secondItem="mIW-zA-MKF" secondAttribute="trailing" constant="16" id="Ixv-Vw-bch"/>
+                            <constraint firstItem="RZD-mI-Jda" firstAttribute="trailing" secondItem="DK7-Bg-uqV" secondAttribute="trailing" constant="16" id="Kke-0f-bnU"/>
                             <constraint firstItem="mIW-zA-MKF" firstAttribute="top" secondItem="psc-o8-Ncf" secondAttribute="bottom" constant="16" id="MYV-o8-O3m"/>
                             <constraint firstItem="QSV-Qn-18G" firstAttribute="centerY" secondItem="AfH-qJ-BIl" secondAttribute="centerY" id="NnO-3C-Njp"/>
                             <constraint firstItem="mIW-zA-MKF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="AfH-qJ-BIl" secondAttribute="leading" constant="20" symbolic="YES" id="Opd-3B-0A5"/>
                             <constraint firstAttribute="trailing" secondItem="nme-bj-q5k" secondAttribute="trailing" constant="16" id="aiw-84-pZe"/>
+                            <constraint firstItem="DK7-Bg-uqV" firstAttribute="leading" secondItem="RZD-mI-Jda" secondAttribute="leading" constant="16" id="eCe-0W-bdg"/>
+                            <constraint firstItem="DK7-Bg-uqV" firstAttribute="top" secondItem="psc-o8-Ncf" secondAttribute="bottom" constant="20" id="gyU-UR-4O8"/>
                             <constraint firstItem="dJz-k9-jJE" firstAttribute="top" secondItem="nme-bj-q5k" secondAttribute="bottom" constant="20" id="hmz-dF-4E0"/>
                             <constraint firstItem="QSV-Qn-18G" firstAttribute="centerX" secondItem="AfH-qJ-BIl" secondAttribute="centerX" id="mOW-o4-MYc"/>
                             <constraint firstItem="GSj-Tg-aog" firstAttribute="top" secondItem="QSV-Qn-18G" secondAttribute="bottom" constant="20" id="q92-st-Qkk"/>
@@ -238,7 +247,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="735" y="-9"/>
+            <point key="canvasLocation" x="733.60000000000002" y="-9.4452773613193415"/>
         </scene>
     </scenes>
 </document>
