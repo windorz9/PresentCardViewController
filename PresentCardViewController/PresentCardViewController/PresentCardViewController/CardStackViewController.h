@@ -11,7 +11,7 @@
 typedef void(^Complection)(void);
 
 @protocol CardStackViewControllerDelegate <NSObject>
-
+@optional
 - (void)didFinishStacking:(UIViewController *)viewController;
 - (void)didFinishUnStacking:(UIViewController *)viewController;
 - (BOOL)shouldDismiss:(UIViewController *)viewContrller;
@@ -109,7 +109,7 @@ typedef void(^Complection)(void);
  @param color CardController 每个会加一个 假的self.view 给一个设置好的颜色, 默认是 present 的视图控制器的 bgColor
  @param complectionBlock 完成回调
  */
-- (void)stackViewController:(UIViewController *)newContrller WithSize:(CGSize)size WithRoundedTopCorners:(BOOL)roundedCorners draggable:(BOOL)isDraggable BottomBackgroundColor:(UIColor *)color Complection:(Complection)complectionBlock;
+- (void)stackViewController:(UIViewController *)newContrller withSize:(CGSize)size roundedTopCorners:(BOOL)roundedCorners draggable:(BOOL)isDraggable bottomBackgroundColor:(UIColor *)color complection:(Complection)complectionBlock;
 
 
 /**
@@ -141,7 +141,7 @@ typedef void(^Complection)(void);
  @param numberOfCards 控制器个数
  @param complection 完成回调.
  */
-- (void)unstackLast:(NSInteger)numberOfCards ComplectionHandle:(Complection)complection;
+- (void)unstackLast:(NSInteger)numberOfCards complectionHandle:(Complection)complection;
 
 /**
  将 rootVC 后面的全部出栈, 只保留一个 rootVC
