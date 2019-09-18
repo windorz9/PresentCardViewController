@@ -13,7 +13,6 @@
 #import "UIView+Extension.h"
 #import "Constants.h"
 
-
 @interface CardStackViewController () <UIDynamicAnimatorDelegate>
 
 @property (nonatomic, strong) UIColor *bgColor;
@@ -41,7 +40,6 @@
 
 #pragma mark 懒加载
 - (NSMutableArray<UIViewController *> *)viewControllers {
-    
     if (!_viewControllers) {
         _viewControllers = [NSMutableArray<UIViewController *> array];
     }
@@ -49,101 +47,84 @@
 }
 
 - (NSMutableArray<UIAttachmentBehavior *> *)attachmentBehaviors {
-    
     if (!_attachmentBehaviors) {
         _attachmentBehaviors = [NSMutableArray<UIAttachmentBehavior *> array];
     }
     return _attachmentBehaviors;
-    
 }
 
 #pragma mark 初始化方法
 - (instancetype)initWithRootViewcontroller:(UIViewController *)rootViewController {
-    
     self = [super initWithNibName:nil bundle:nil];
     self.rootViewController = rootViewController;
     return self;
 }
 
 - (instancetype)init {
-    
     self = [super initWithNibName:nil bundle:nil];
     return self;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    
     NSAssert(NO, @"这个方法没有被实现");
     return nil;
 }
 
 #pragma mark 只读属性
 - (UIViewController *)topViewController {
-    
     return self.viewControllers.lastObject;
-    
 }
 
 - (NSInteger)numberOfCards {
-    
     return self.viewControllers.count;
 }
 
 - (UIViewController *)previousViewController {
-    
     NSInteger previousCardIndex = self.viewControllers.count - 2;
     if (previousCardIndex >= 0) {
         return self.viewControllers[previousCardIndex];
     }
     return nil;
-    
 }
 
 #pragma mark 视图相关
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
     // 首先进行初始值的设置
     [self setDefaultValue];
-    
+
     [self setupView];
-    
+
     [self initialiseAnimator];
-    
+
     [self addGestureRecognizer];
-    
+
     if (self.rootViewController) {
         UIViewController *viewController = self.rootViewController;
 
-        [self stackViewController:viewController WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:nil];
-        
+        [self stackViewController:viewController withSize:CGSizeZero roundedTopCorners:YES draggable:YES bottomBackgroundColor:nil complection:nil];
     }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:false];
-    
+
     if (!self.isBeingPresented) {
         return;
     }
-    
+
     UIImage *screenShotImage = [Helpers drawWindowHierarchyAfterScreenUpdates:NO];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:screenShotImage];
-    
+
     [self.view insertSubview:imageView atIndex:0];
     [imageView pinEdgesToSuperviewEdges];
-    
- 
 }
 
 - (void)viewDidLayoutSubviews {
-    
     [super viewDidLayoutSubviews];
-    
+
     // 遍历出控制器数组当中所有的子控制器, 然后重新设置 layer.mask
     for (UIViewController *vc in self.viewControllers) {
-        
         if (vc.view.layer.mask != nil) {
             vc.view.layer.mask = [self maskLayerWithBounds:vc.view.bounds];
         }
@@ -151,75 +132,64 @@
 }
 
 - (CAShapeLayer *)maskLayerWithBounds:(CGRect)bounds {
-    
     CAShapeLayer *layer = [[CAShapeLayer alloc] init];
     layer.frame = bounds;
     CGRect rect = CGRectMake(0, 0, bounds.size.width, bounds.size.height + fakeViewHeight);
     rect.origin = CGPointZero;
     // UIRectCornerTopRight && UIRectCornerTopLeft
-    layer.path = [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners: UIRectCornerTopRight | UIRectCornerTopLeft cornerRadii:CGSizeMake(topCornerRadius, topCornerRadius)] CGPath];
-    
+    layer.path = [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerTopRight | UIRectCornerTopLeft cornerRadii:CGSizeMake(topCornerRadius, topCornerRadius)] CGPath];
+
     return layer;
 }
 
-
 #pragma mark 属性初始值设置
 - (void)setDefaultValue {
-    
     self.firstCardTopOffset = [[UIApplication sharedApplication] statusBarFrame].size.height;
-    
+
     self.bgColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
-    
+
     self.topOffsetBetweenCards = 20.0;
-    
+
     self.cardDelay = 0.1;
-    
+
     self.cardScaleFactor = 0.95;
-    
+
     self.verticalTranslation = -20;
-    
+
     self.bounces = YES;
-    
+
     self.automaticallyDismiss = YES;
-    
+
     self.damping = 1.0;
-    
+
     self.frequency = 5.0;
-    
+
     self.isPresentingCard = NO;
-    
+
     self.initialDraggingPoint = CGPointZero;
-    
-    
 }
 
 #pragma mark 设置视图
 - (void)setupView {
-    
     self.view.backgroundColor = [UIColor clearColor];
-    
-    
 }
 
 - (void)initialiseAnimator {
-    
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
     self.animator.delegate = self;
-    
+
     self.dynamicItemBehavior = [[UIDynamicItemBehavior alloc] init];
     self.dynamicItemBehavior.allowsRotation = NO;
-    
+
     self.collisionBehavior = [[UICollisionBehavior alloc] init];
     self.collisionBehavior.collisionMode = UICollisionBehaviorModeBoundaries;
     [self.collisionBehavior addBoundaryWithIdentifier:@"leftMargin" fromPoint:CGPointMake(-0.5, 0) toPoint:CGPointMake(-0.5, CGRectGetMaxY(self.view.bounds))];
-    
-    [self.collisionBehavior addBoundaryWithIdentifier:@"rightMargin" fromPoint:CGPointMake(CGRectGetMaxX(self.view.bounds) + 0.5, 0) toPoint:CGPointMake(CGRectGetMaxX(self.view.bounds) + 0.5, CGRectGetMaxY(self.view.bounds))];
-    
-     [self.animator addBehavior:self.dynamicItemBehavior];
-     [self.animator addBehavior:self.collisionBehavior];
-    
-}
 
+    [self.collisionBehavior addBoundaryWithIdentifier:@"rightMargin" fromPoint:CGPointMake(CGRectGetMaxX(self.view.bounds) + 0.5, 0) toPoint:CGPointMake(CGRectGetMaxX(self.view.bounds) + 0.5, CGRectGetMaxY(self.view.bounds))];
+
+    [self.animator addBehavior:self.dynamicItemBehavior];
+    [self.animator addBehavior:self.collisionBehavior];
+}
 
 /// size 默认为 zero
 /// roundedCorners true
@@ -237,8 +207,7 @@
  @param color CardController 每个会加一个 假的self.view 给一个设置好的颜色, 默认是 present 的视图控制器的 bgColor
  @param complectionBlock 完成回调
  */
-- (void)stackViewController:(UIViewController *)newContrller WithSize:(CGSize)size WithRoundedTopCorners:(BOOL)roundedCorners draggable:(BOOL)isDraggable BottomBackgroundColor:(UIColor *)color Complection:(Complection)complectionBlock {
-    
+- (void)stackViewController:(UIViewController *)newContrller withSize:(CGSize)size roundedTopCorners:(BOOL)roundedCorners draggable:(BOOL)isDraggable bottomBackgroundColor:(UIColor *)color complection:(Complection)complectionBlock {
     if (self.viewControllers.count == 0) {
         self.rootViewController = newContrller;
     }
@@ -247,60 +216,52 @@
         self.stackCompletionBlock = complectionBlock;
     }
     self.isPresentingCard = YES;
-    
+
     [self animateCurrentCardBackToPresentNextOne];
-    
+
     // 创建背景视图 和 self.view.bounds 等大
     UIView *containerView = [self createContainerDimView];
-    
+
     [self addChildViewController:newContrller ContainView:containerView fakeViewBackgroundColor:color];
-    
+
     NSInteger numberOfPreviousCards = self.viewControllers.count - 1;
-    
+
     newContrller.view.frame = [self newControllerFrameFromSize:size previousCards:numberOfPreviousCards];
 
-    
     if (roundedCorners) {
         newContrller.view.layer.mask = [self maskLayerWithBounds:newContrller.view.bounds];
-        
     }
     [newContrller.view addGestureRecognizer:self.panGestureRecognizer];
-    
+
     [UIView animateWithDuration:0.3 animations:^{
         containerView.backgroundColor = self.bgColor;
     }];
-    
+
     [Helpers delayClosure:self.cardDelay Closure:^{
-        
         CGFloat anchorY = CGRectGetMaxY(self.view.frame) - CGRectGetMidY(newContrller.view.bounds);
         [self attachView:newContrller.view ToAnchorPoint:CGPointMake(self.view.center.x, anchorY)];
         [self.collisionBehavior addItem:newContrller.view];
-        
-        
     }];
- 
 }
-
 
 /**
  当前卡片退出后面, 显示当前顶上的 Card 动画
  */
 - (void)animateCurrentCardBackToPresentNextOne {
-    
     if (!self.topViewController) {
         return;
     }
     UIViewController *viewController = self.topViewController;
-    
+
     CATransform3D transform = CATransform3DMakeScale(self.cardScaleFactor, self.cardScaleFactor, 1);
-    
+
     CATransform3D finalTransform = CATransform3DTranslate(transform, 0, self.verticalTranslation, 0);
-    
+
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform"];
     anim.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
     anim.toValue = [NSValue valueWithCATransform3D:finalTransform];
     anim.duration = 0.4;
-    anim.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1 :0.5 :0.5 :1];
+    anim.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1:0.5:0.5:1];
     anim.fillMode = kCAFillModeForwards;
     anim.removedOnCompletion = NO;
     [viewController.view.layer addAnimation:anim forKey:@"transform"];
@@ -309,36 +270,32 @@
 // 创建背景模糊视图
 // 后面大的显示视图 做背景用.
 - (UIView *)createContainerDimView {
-    
     UIView *containerView = [[UIView alloc] init];
     containerView.backgroundColor = [UIColor clearColor];
     containerView.frame = self.view.bounds;
-    
+
     [self.view addSubview:containerView];
     return containerView;
 }
 
 - (void)addChildViewController:(UIViewController *)newController ContainView:(UIView *)containerView fakeViewBackgroundColor:(UIColor *)bgColor {
-    
     [self.viewControllers addObject:newController];
-    
-    [self addChildViewController:newController];
-    
-    [containerView addSubview: newController.view];
-    
-    [self addFakeBottomViewUnderneath:newController.view WithBackgroundColor:bgColor];
-    
-    [newController didMoveToParentViewController:self];
 
+    [self addChildViewController:newController];
+
+    [containerView addSubview:newController.view];
+
+    [self addFakeBottomViewUnderneath:newController.view WithBackgroundColor:bgColor];
+
+    [newController didMoveToParentViewController:self];
 }
 
 // 添加屏幕外的 fakeBottom 视图
 - (void)addFakeBottomViewUnderneath:(UIView *)view WithBackgroundColor:(UIColor *)backgroundColor {
-    
     UIView *fakeView = [[UIView alloc] init];
     fakeView.translatesAutoresizingMaskIntoConstraints = NO;
     fakeView.backgroundColor = view.backgroundColor;
-    
+
     [view addSubview:fakeView];
 
     // 添加约束
@@ -357,55 +314,39 @@
     [view addConstraint:rightContraint];
     [view addConstraint:topContraint];
     [view addConstraint:heightContrain];
-
-
 }
 
 - (CGRect)newControllerFrameFromSize:(CGSize)size previousCards:(NSInteger)previousCards {
-    
     CGFloat viewHeight = self.view.bounds.size.height;
     CGFloat viewWidth = self.view.bounds.size.width;
-    
-    
 
     if (!CGSizeEqualToSize(size, CGSizeZero)) {
-        
         return CGRectMake(0, viewHeight, size.width, size.height);
-        
     }
-    
+
     CGFloat topMargin = self.firstCardTopOffset + (self.topOffsetBetweenCards * previousCards);
-    
+
     return CGRectMake(0, viewHeight, viewWidth, viewHeight - topMargin);
 }
 
-
 // 添加吸附动画
 - (void)attachView:(UIView *)aView ToAnchorPoint:(CGPoint)anchorPoint {
-    
     UIAttachmentBehavior *attachmentBehaviour = [[UIAttachmentBehavior alloc] initWithItem:aView attachedToAnchor:anchorPoint];
-    
+
     attachmentBehaviour.length = 1;
     [attachmentBehaviour setDamping:self.damping];
     [attachmentBehaviour setFrequency:self.frequency];
-    
+
     [self.animator addBehavior:attachmentBehaviour];
     [self.attachmentBehaviors addObject:attachmentBehaviour];
     [self.dynamicItemBehavior addItem:aView];
-    
-    
 }
 
-
-
 - (void)addGestureRecognizer {
-    
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender {
-    
     if (self.topViewController && [self.attachmentBehaviors lastObject]) {
         // 获取到最顶层的视图
         UIView *panningView = self.topViewController.view;
@@ -415,11 +356,11 @@
         UIView *currentDimView = panningView.superview;
         // 获取当前手指触碰的初始位置 相较于当前 self 控制器
         CGPoint panLocationInView = [sender locationInView:self.view];
-        
+
         // 获取初始的锚点
         CGFloat defaultAnchorPointX = currentAttachmentBehaviour.anchorPoint.x;
         CGFloat defaultAnchorPointY = CGRectGetMaxY(self.view.bounds) - CGRectGetMidY(panningView.bounds);
-        
+
         switch (sender.state) {
             case UIGestureRecognizerStatePossible:
                 return;
@@ -427,13 +368,12 @@
             case UIGestureRecognizerStateBegan:
                 self.initialDraggingPoint = panLocationInView;
                 break;
-            case UIGestureRecognizerStateChanged:
-            {
+            case UIGestureRecognizerStateChanged: {
                 CGFloat newYPosition = defaultAnchorPointY + [self calculateYPositionwithLocation:panLocationInView.y Dragging:self.initialDraggingPoint.y];
                 currentAttachmentBehaviour.anchorPoint = CGPointMake(defaultAnchorPointX, newYPosition);
-                
-                CGFloat percentageDragged = (dragAmountToDimBackgroundColor - (panLocationInView.y - self.initialDraggingPoint.y))/dragAmountToDimBackgroundColor;
-                
+
+                CGFloat percentageDragged = (dragAmountToDimBackgroundColor - (panLocationInView.y - self.initialDraggingPoint.y)) / dragAmountToDimBackgroundColor;
+
                 CGFloat alphaPercentage = MIN(0.4, percentageDragged - 0.6);
                 currentDimView.backgroundColor = [self.bgColor colorWithAlphaComponent:alphaPercentage];
                 // currentDimView.backgroundColor = self.topViewController.view.backgroundColor;
@@ -442,20 +382,20 @@
             case UIGestureRecognizerStateEnded:
             case UIGestureRecognizerStateFailed:
             case UIGestureRecognizerStateCancelled:
-                
+
                 currentAttachmentBehaviour.anchorPoint = CGPointMake(defaultAnchorPointX, defaultAnchorPointY);
                 CGPoint velocity = CGPointMake(0, [sender velocityInView:self.view].y);
-                
+
                 [self.dynamicItemBehavior addLinearVelocity:velocity forItem:panningView];
-                
+
                 BOOL shouldDismiss;
                 if ([self.delegate respondsToSelector:@selector(shouldDismiss:)]) {
                     shouldDismiss = [self.delegate shouldDismiss:self.topViewController];
                 } else {
                     shouldDismiss = YES;
                 }
-                
-                if (([sender translationInView: self.view].y > dragLimitToDismiss) && shouldDismiss) {
+
+                if (([sender translationInView:self.view].y > dragLimitToDismiss) && shouldDismiss) {
                     [self unstackLastViewControllerWithHandle:nil];
                 } else {
                     [UIView animateWithDuration:dimDuration animations:^{
@@ -464,11 +404,7 @@
                 }
                 break;
         }
-        
     }
-    
-    
-    
 }
 
 /**
@@ -479,22 +415,20 @@
  @param complection 完成回调
  */
 - (void)removeDimViewToViewController:(UIViewController *)viewController animated:(BOOL)animated complectionBlock:(Complection)complection {
-    
     if (!viewController.view.superview) {
         return;
     }
     UIView *containerView = viewController.view.superview;
 
     NSTimeInterval duration = animated ? dimDuration : 0.0;
-    
+
     [UIView animateWithDuration:duration
                      animations:^{
-                         containerView.backgroundColor = [UIColor clearColor];
-                     } completion:^(BOOL finished) {
-                         complection();
-                     }];
+        containerView.backgroundColor = [UIColor clearColor];
+    } completion:^(BOOL finished) {
+        complection();
+    }];
 }
-
 
 /**
  topViewController 的上一个视图控制器的出现动画
@@ -502,93 +436,81 @@
  @param viewController 最上层控制器
  */
 - (void)animateCardToFrontViewController:(UIViewController *)viewController {
-    
     double duration = 0.4;
-    
+
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform"];
-    
-    anim.toValue = [NSValue  valueWithCATransform3D:CATransform3DIdentity];
+
+    anim.toValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
     anim.duration = duration;
-    
-    anim.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1 :0.5 :0.5 : 1];
-    
+
+    anim.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1:0.5:0.5:1];
+
     anim.fillMode = kCAFillModeForwards;
-    
+
     [anim setRemovedOnCompletion:NO];
-    
+
     [viewController.view.layer addAnimation:anim forKey:@"transformBack"];
-    
-    
 }
 
 - (CGFloat)calculateYPositionwithLocation:(CGFloat)location Dragging:(CGFloat)initialDragging {
-    
     CGFloat totalAmountDragged = location - initialDragging;
-    
+
     if (totalAmountDragged < 0) {
         if (!self.bounces) {
             return 0;
         }
-        return totalAmountDragged * log10(1 + self.initialDraggingPoint.y/fabs(totalAmountDragged));
+        return totalAmountDragged * log10(1 + self.initialDraggingPoint.y / fabs(totalAmountDragged));
     } else {
-        
         return totalAmountDragged;
     }
-    
 }
-
-
-
 
 /**
  topViewController 出栈
  */
 - (void)dismissCard {
-    
     if (!(self.topViewController && self.attachmentBehaviors.lastObject && self.topViewController.view.superview)) {
-        
         return;
     }
-    
+
     UIViewController *viewController = self.topViewController;
     UIAttachmentBehavior *currentBehaviour = self.attachmentBehaviors.lastObject;
     UIView *viewControllerSuperview = viewController.view.superview;
-    
+
     [viewController willMoveToParentViewController:nil];
     [viewController.view removeFromSuperview];
-    
+
     [viewControllerSuperview removeFromSuperview];
     [viewController removeFromParentViewController];
     [self.viewControllers removeLastObject];
-    
+
     [self.animator removeBehavior:currentBehaviour];
     [self.attachmentBehaviors removeLastObject];
-    
+
     [self.collisionBehavior removeItem:viewController.view];
     [self.dynamicItemBehavior removeItem:viewController.view];
-    
+
     if ([self.delegate respondsToSelector:@selector(didFinishUnStacking:)]) {
         [self.delegate didFinishUnStacking:viewController];
     }
-    
+
     if (self.topViewController) {
         [self.topViewController.view addGestureRecognizer:self.panGestureRecognizer];
         return;
     }
-    
+
     [self.animator removeBehavior:self.dynamicItemBehavior];
     [self.animator removeBehavior:self.collisionBehavior];
-    
+
     if (!self.automaticallyDismiss) {
         return;
     }
-    
+
     [self dismissViewControllerAnimated:NO completion:^{
         if ([self.delegate respondsToSelector:@selector(didFinishDismissingCardController)]) {
             [self.delegate didFinishDismissingCardController];
         }
     }];
-  
 }
 
 #pragma mark 外界调用出栈
@@ -598,24 +520,17 @@
  @param numberOfCards 控制器个数
  @param complection 完成回调.
  */
-- (void)unstackLast:(NSInteger)numberOfCards ComplectionHandle:(Complection)complection {
-    
+- (void)unstackLast:(NSInteger)numberOfCards complectionHandle:(Complection)complection {
     if (numberOfCards < self.numberOfCards) {
-        
         NSMutableArray *viewControllersToUnstack = [NSMutableArray<UIViewController *> array];
-        
-        
-        [self.viewControllers enumerateObjectsWithOptions:(NSEnumerationOptions)NSEnumerationReverse usingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 
+        [self.viewControllers enumerateObjectsWithOptions:(NSEnumerationOptions)NSEnumerationReverse usingBlock:^(UIViewController *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
             if (idx > (self.numberOfCards - numberOfCards - 1)) {
-
                 [viewControllersToUnstack addObject:obj];
             }
         }];
 
-         [self unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)viewControllersToUnstack Handle:complection];
-        
-        
+        [self unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)viewControllersToUnstack Handle:complection];
     } else {
         // 解决方案一: 强制报错
 //        NSAssert(NO, @"numberOfCards 必须小于 viewControllers 的 count");
@@ -623,10 +538,7 @@
         [self unstackAllViewControllersWithHandle:complection];
         return;
     }
-    
 }
-
-
 
 /**
  将当前数组里面的所有的控制器出栈
@@ -634,9 +546,7 @@
  @param complection 完成回调
  */
 - (void)unstackAllViewControllersWithHandle:(Complection)complection {
-    
     [self unstackSelectedViewControllers:self.viewControllers Handle:complection];
-
 }
 
 /**
@@ -645,14 +555,13 @@
  @param complection 出栈后的完成回调
  */
 - (void)unstackLastViewControllerWithHandle:(Complection)complection {
-    
     if (self.attachmentBehaviors.lastObject && self.topViewController) {
         UIAttachmentBehavior *attachmentBehaviour = self.attachmentBehaviors.lastObject;
         id<UIDynamicItem> item = attachmentBehaviour.items.lastObject;
 
         UIViewController *topController = self.topViewController;
         attachmentBehaviour.anchorPoint = CGPointMake(self.view.center.x, item.center.y + item.bounds.size.height);
-        
+
         // 如果topViewController 底下还存在控制器 就进行显示动画
         if (self.previousViewController) {
             [self animateCardToFrontViewController:self.previousViewController];
@@ -663,13 +572,10 @@
                 complection();
             }
         }];
-        
     } else {
         return;
     }
 }
-
-
 
 /**
  将 rootVC 后面的全部出栈, 只保留一个 rootVC
@@ -677,12 +583,8 @@
  @param complection 完成回调
  */
 - (void)unstackToRootViewControllerWithHandle:(Complection)complection {
-    
-    [self unstackLast:self.viewControllers.count - 1 ComplectionHandle:complection];
-    
-    
+    [self unstackLast:self.viewControllers.count - 1 complectionHandle:complection];
 }
-
 
 /**
  指定一个self.viewControllers 里面的控制器 然后将它和它后面的控制器全部出栈
@@ -690,23 +592,17 @@
  @param viewController 需要出栈的控制器
  @param complection 完成回调
  */
-- (void)unstackToViewController:(UIViewController *)viewController ComplectionHandle:(Complection)complection {
-    
-    if (![self.viewControllers indexOfObject: viewController]) {
-        
+- (void)unstackToViewController:(UIViewController *)viewController complectionHandle:(Complection)complection {
+    if (![self.viewControllers indexOfObject:viewController]) {
         NSAssert(NO, @"控制器没有在栈中被发现");
-        
     }
-    
-    NSInteger index = [self.viewControllers indexOfObject: viewController];
-    
+
+    NSInteger index = [self.viewControllers indexOfObject:viewController];
+
     NSInteger cardsToUnstack = self.numberOfCards - index + 1;
-    
-    [self unstackLast:cardsToUnstack ComplectionHandle:complection];
-    
+
+    [self unstackLast:cardsToUnstack complectionHandle:complection];
 }
-
-
 
 /**
  传入一个控制器的数组, 并将其全部进行出栈
@@ -715,28 +611,25 @@
  @param complection 完成回调.
  */
 - (void)unstackSelectedViewControllers:(NSMutableArray<UIViewController *> *)selectedControllers Handle:(Complection)complection {
-    
-    CGPoint anchorPoint = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height * 3/2);
-    
+    CGPoint anchorPoint = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height * 3 / 2);
+
     NSInteger remainingCards = self.numberOfCards - selectedControllers.count;
     NSMutableArray *behaviours = (NSMutableArray *)[self.attachmentBehaviors subarrayWithRange:NSMakeRange(remainingCards, self.numberOfCards - remainingCards)];
-    
+
     for (UIAttachmentBehavior *behavior in behaviours) {
         behavior.anchorPoint = anchorPoint;
     }
-    
+
     [UIView animateWithDuration:dimDuration animations:^{
-        
         for (UIViewController *vc in selectedControllers) {
             [self removeDimViewToViewController:vc animated:NO complectionBlock:^{
                 [self dismissCard];
             }];
         }
-        
     } completion:^(BOOL finished) {
         if (selectedControllers.count < self.viewControllers.count) {
             NSInteger index = self.viewControllers.count - selectedControllers.count - 1;
-            
+
             UIViewController *topVC = self.viewControllers[index];
             [self animateCardToFrontViewController:topVC];
             if (complection) {
@@ -744,30 +637,22 @@
             }
         }
     }];
-    
 }
 
 #pragma mark UIDynamicAnimatorDelegate
 - (void)dynamicAnimatorDidPause:(UIDynamicAnimator *)animator {
-    
     if (self.isPresentingCard && self.topViewController) {
-        
         self.isPresentingCard = NO;
-        
-        if ([self.delegate respondsToSelector:@selector(didFinishStacking:)]) {
-            
-            [self.delegate didFinishStacking:self.topViewController];
 
+        if ([self.delegate respondsToSelector:@selector(didFinishStacking:)]) {
+            [self.delegate didFinishStacking:self.topViewController];
         }
         if (self.stackCompletionBlock) {
             self.stackCompletionBlock();
         }
-        
     } else {
         return;
     }
-    
-    
 }
 
 @end

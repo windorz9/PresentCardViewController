@@ -50,7 +50,7 @@
 
     CardViewController *rootVC = [self newController];
     rootVC.delegate = self;
-    [self.cardStackController stackViewController:rootVC WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:nil];
+    [self.cardStackController stackViewController:rootVC withSize:CGSizeZero roundedTopCorners:YES draggable:YES bottomBackgroundColor:nil complection:nil];
     
 }
 
@@ -80,7 +80,7 @@
 - (void)stackAnotherCard {
     CardViewController *cardVC = [self newController];
     cardVC.delegate = self;
-    [self.cardStackController stackViewController:cardVC WithSize:CGSizeZero WithRoundedTopCorners:YES draggable:YES BottomBackgroundColor:nil Complection:^{
+    [self.cardStackController stackViewController:cardVC withSize:CGSizeZero roundedTopCorners:YES draggable:YES bottomBackgroundColor:nil complection:^{
         NSLog(@"Complection Block");
     }];
 }

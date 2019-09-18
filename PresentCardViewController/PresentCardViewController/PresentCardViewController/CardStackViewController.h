@@ -132,7 +132,7 @@ typedef void(^Complection)(void);
  @param viewController 需要出栈的控制器
  @param complection 完成回调
  */
-- (void)unstackToViewController:(UIViewController *)viewController ComplectionHandle:(Complection)complection;
+- (void)unstackToViewController:(UIViewController *)viewController complectionHandle:(Complection)complection;
 
 
 /**
